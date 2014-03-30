@@ -39,9 +39,22 @@ public class PlayerController : MonoBehaviour
 	
 	void FixedUpdate()
 	{
-		float moveHorizontal = Input.GetAxis ("Horizontal");
-		float moveVertical = Input.GetAxis ("Vertical");
+		float moveHorizontal = 0;
+		float moveVertical = 0; 
 
+#if (UNITY_IPHONE || UNITY_ANDROID)
+		if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)
+		{
+			moveHorizontal = Input.GetTouch(0).deltaPosition.x;
+			moveVertical = Input.GetTouch(0).deltaPosition.y;
+		}
+#else
+		moveHorizontal = Input.GetAxis ("Horizontal");
+		moveVertical = Input.GetAxis ("Vertical");
+#endif
+
+		// Handle movement
+		// TODO: put in own method
 		Vector3 movement = new Vector3 (moveHorizontal, 0.0f, moveVertical);
 		rigidbody.velocity = movement * speed;
 		
@@ -53,6 +66,8 @@ public class PlayerController : MonoBehaviour
 			);
 
 		rigidbody.rotation = Quaternion.Euler (0.0f, 0.0f, rigidbody.velocity.x * -tilt);
+
+		// end Movement
 	}
 
 	// Combat Methods
