@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour
 	void Update()
 	{
 #if (UNITY_IPHONE || UNITY_ANDROID)
-		if (Input.touchCount > 0)
+		if (Input.touchCount > 1)
 		{
 			RequestFireShot();
 		}
@@ -43,18 +43,34 @@ public class PlayerController : MonoBehaviour
 		float moveVertical = 0; 
 
 #if (UNITY_IPHONE || UNITY_ANDROID)
-		if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)
+		if (Input.touchCount > 0)
 		{
-			moveHorizontal = Input.GetTouch(0).deltaPosition.normalized.x;
-			moveVertical = Input.GetTouch(0).deltaPosition.normalized.y;
+			int i = 0;
+			while (i < Input.touchCount)
+			{
+				if (moveHorizontal == 0)
+				{
+					moveHorizontal = Input.GetTouch(i).deltaPosition.normalized.x;
+				}
+				if (moveVertical == 0)
+				{
+					moveVertical = Input.GetTouch(i).deltaPosition.normalized.y;
+				}
+				i++;
+			}
 		}
 #else
 		moveHorizontal = Input.GetAxis ("Horizontal");
 		moveVertical = Input.GetAxis ("Vertical");
 #endif
 
-		// Handle movement
-		// TODO: put in own method
+		HandleMovement(moveHorizontal, moveVertical);
+	}
+
+	// Movement Methods
+
+	void HandleMovement(float moveHorizontal, float moveVertical)
+	{
 		Vector3 movement = new Vector3 (moveHorizontal, 0.0f, moveVertical);
 		rigidbody.velocity = movement * speed;
 		
@@ -63,13 +79,11 @@ public class PlayerController : MonoBehaviour
 				Mathf.Clamp (rigidbody.position.x, boundary.xMin, boundary.xMax),
 				0.0f,
 				Mathf.Clamp (rigidbody.position.z, boundary.zMin, boundary.zMax)
-			);
-
+				);
+		
 		rigidbody.rotation = Quaternion.Euler (0.0f, 0.0f, rigidbody.velocity.x * -tilt);
-
-		// end Movement
 	}
-
+	
 	// Combat Methods
 	
 	void RequestFireShot()
