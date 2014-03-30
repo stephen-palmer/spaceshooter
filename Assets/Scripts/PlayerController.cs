@@ -45,8 +45,8 @@ public class PlayerController : MonoBehaviour
 #if (UNITY_IPHONE || UNITY_ANDROID)
 		if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)
 		{
-			moveHorizontal = Input.GetTouch(0).deltaPosition.x;
-			moveVertical = Input.GetTouch(0).deltaPosition.y;
+			moveHorizontal = Input.GetTouch(0).deltaPosition.normalized.x;
+			moveVertical = Input.GetTouch(0).deltaPosition.normalized.y;
 		}
 #else
 		moveHorizontal = Input.GetAxis ("Horizontal");
