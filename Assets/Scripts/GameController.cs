@@ -1,6 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+class DisplayStrings
+{
+#if (UNITY_IPHONE || UNITY_ANDROID)
+	public static string restartText = "Tap to Restart";
+#else
+	public static string restartText = "Press 'R' to Restart";
+#endif
+	public static string gameOverText = "Game Over!";
+	public static string scoreText = "Score: ";
+}
+
 public class GameController : MonoBehaviour {
 
 	public GameObject hazard;
@@ -20,11 +31,14 @@ public class GameController : MonoBehaviour {
 
 	void Start ()
 	{
+		// Clear everything
+
 		gameOver = false;
 		restart = false;
 		restartText.text = "";
 		gameOverText.text = "";
 		score = 0;
+
 		UpdateScore ();
 		StartCoroutine( SpawnWaves () );
 	}
@@ -33,10 +47,17 @@ public class GameController : MonoBehaviour {
 	{
 		if (restart)
 		{
+#if (UNITY_IPHONE || UNITY_ANDROID)
+			if (Input.touchCount > 0)
+			{
+				Application.LoadLevel (Application.loadedLevel);
+			}
+#else
 			if (Input.GetKeyDown (KeyCode.R))
 			{
 				Application.LoadLevel (Application.loadedLevel);
 			}
+#endif
 		}
 	}
 
@@ -56,7 +77,7 @@ public class GameController : MonoBehaviour {
 
 			if (gameOver)
 			{
-				restartText.text = "Press 'R' for Restart";
+				restartText.text = DisplayStrings.restartText;
 				restart = true;
 				break;
 			}		
@@ -71,12 +92,12 @@ public class GameController : MonoBehaviour {
 
 	void UpdateScore()
 	{
-		scoreText.text = "Score: " + score;
+		scoreText.text = DisplayStrings.scoreText + score;
 	}
 
 	public void GameOver ()
 	{
-		gameOverText.text = "Game Over!";
+		gameOverText.text = DisplayStrings.gameOverText;
 		gameOver = true;
 	}
 
