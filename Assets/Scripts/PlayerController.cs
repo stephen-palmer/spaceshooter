@@ -48,11 +48,11 @@ public class PlayerController : MonoBehaviour
 			int i = 0;
 			while (i < Input.touchCount)
 			{
-				if (moveHorizontal == 0)
+				if (moveHorizontal == 0 && (Input.GetTouch(i).deltaPosition.x < -5 || Input.GetTouch(i).deltaPosition.x > 5))
 				{
 					moveHorizontal = Input.GetTouch(i).deltaPosition.normalized.x;
 				}
-				if (moveVertical == 0)
+				if (moveVertical == 0 && (Input.GetTouch(i).deltaPosition.y < -5 || Input.GetTouch(i).deltaPosition.y > 5))
 				{
 					moveVertical = Input.GetTouch(i).deltaPosition.normalized.y;
 				}
