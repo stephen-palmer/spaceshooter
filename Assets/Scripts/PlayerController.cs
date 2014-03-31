@@ -13,7 +13,9 @@ public class PlayerController : MonoBehaviour
 	public float speed;
 	public float tilt;
 	public Boundary boundary;
-
+	// Mobile touch movement
+	public float dragThreshold = 1;
+	
 	// Combat + Firing
 	public GameObject shot;
 	public Transform shotSpawn;
@@ -48,11 +50,11 @@ public class PlayerController : MonoBehaviour
 			int i = 0;
 			while (i < Input.touchCount)
 			{
-				if (moveHorizontal == 0 && (Input.GetTouch(i).deltaPosition.x < -5 || Input.GetTouch(i).deltaPosition.x > 5))
+				if (moveHorizontal == 0 && (Input.GetTouch(i).deltaPosition.x < -dragThreshold || Input.GetTouch(i).deltaPosition.x > dragThreshold))
 				{
 					moveHorizontal = Input.GetTouch(i).deltaPosition.normalized.x;
 				}
-				if (moveVertical == 0 && (Input.GetTouch(i).deltaPosition.y < -5 || Input.GetTouch(i).deltaPosition.y > 5))
+				if (moveVertical == 0 && (Input.GetTouch(i).deltaPosition.y < -dragThreshold || Input.GetTouch(i).deltaPosition.y > dragThreshold))
 				{
 					moveVertical = Input.GetTouch(i).deltaPosition.normalized.y;
 				}
